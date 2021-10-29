@@ -20,9 +20,9 @@ public class Elevator {
         return currentValue;
     }
 
-    public void add(int portion) {
-        synchronized (this){
+    public synchronized void add(int portion) {
+//        synchronized (this){
             currentValue += portion;
-        }
+//        }
     }
 }
