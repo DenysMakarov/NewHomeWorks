@@ -1,7 +1,7 @@
-package controller;
+package Elevators.controller;
 
-import model.Elevator;
-import model.Truck;
+import Elevators.model.Elevator;
+import Elevators.model.Truck;
 
 
 public class TruckApp {

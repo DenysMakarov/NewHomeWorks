@@ -1,4 +1,4 @@
-package model;
+package Elevators.model;
 
 public class Truck implements Runnable {
     int nRaces;
