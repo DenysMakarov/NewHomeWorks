@@ -42,9 +42,7 @@ public class Cockroach implements Runnable {
             if (chunks == dist) {
                 synchronized (Cockroach.class) {
                     if (winner == null) {
-                        synchronized (Cockroach.class) {
-                            setWinner(name);
-                        }
+                        setWinner(name);
                     }
                     System.out.println("Finshed = " + name);
                 }
