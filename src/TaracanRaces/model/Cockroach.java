@@ -17,14 +17,12 @@ public class Cockroach implements Runnable {
         this.dist = dist;
     }
 
-    private int randomMs(int min, int max){
-        return (int) ((Math.random() * ( (max) - min )) + min);
+    private int randomMs(int min, int max) {
+        return (int) ((Math.random() * ((max) - min)) + min);
     }
 
-    public void setWinner(String name){
-        synchronized (Cockroach.class){
-            winner = name;
-        }
+    public void setWinner(String name) {
+        winner = name;
     }
 
     @Override
@@ -42,10 +40,14 @@ public class Cockroach implements Runnable {
             this.chunks++;
 
             if (chunks == dist) {
-                if (winner == null){
-                    setWinner(name);
+                synchronized (Cockroach.class) {
+                    if (winner == null) {
+                        synchronized (Cockroach.class) {
+                            setWinner(name);
+                        }
+                    }
+                    System.out.println("Finshed = " + name);
                 }
-                System.out.println("Finshed = " + name);
             }
         }
     }
