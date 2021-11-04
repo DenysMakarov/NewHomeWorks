@@ -42,7 +42,9 @@ public class Transfer implements Runnable {
         Lock lockOfAccTo = accTo.getLock();
 
         if (lockOfAccFrom.tryLock()) {
+            lockOfAccFrom.lock();
             if (lockOfAccTo.tryLock()) {
+                lockOfAccTo.lock();
                 try {
                     if (accFrom.getBalance() >= sum) {
                         accFrom.debit(sum);
