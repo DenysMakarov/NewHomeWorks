@@ -12,6 +12,7 @@ public class Transfer implements Runnable {
     Account accRecipient;
     int sum;
     Thread thread;
+
     public Transfer(Account assDonor, Account accRecipient, int sum) {
         this.assDonor = assDonor;
         this.accRecipient = accRecipient;
@@ -38,30 +39,38 @@ public class Transfer implements Runnable {
     }
 
 
-// FIRST SOLUTION
+    // FIRST SOLUTION
     private void transferMoneyFirstSolution(Account accFrom, Account accTo, int sum) throws InterruptedException {
-        Account lockAccount;
+        Account from;
+        Account to;
 
         if (accFrom.getAccNumber() < accTo.getAccNumber()) {
-            lockAccount = accFrom;
+            from = accFrom;
+            to = accTo;
         } else {
-            lockAccount = accTo;
+            from = accTo;
+            to = accFrom;
         }
 
         try {
-            lockAccount.getLock().lock();
-            if (accFrom.getBalance() >= sum) {
-                accFrom.debit(sum);
-                accTo.credit(sum);
+            from.getLock().lock();
+            try {
+                to.getLock().lock();
+                if (accFrom.getBalance() >= sum) {
+                    accFrom.debit(sum);
+                    accTo.credit(sum);
+                }
+            } finally {
+                to.getLock().unlock();
             }
         } finally {
-            lockAccount.getLock().unlock();
+            from.getLock().unlock();
         }
 
     }
 
 
-// SECOND SOLUTION
+    // SECOND SOLUTION
     private void transferMoneySecondSolution(Account accFrom, Account accTo, int sum) throws InterruptedException {
         Lock lockOfAccFrom = accFrom.getLock();
         Lock lockOfAccTo = accTo.getLock();
@@ -76,13 +85,11 @@ public class Transfer implements Runnable {
                         accFrom.debit(sum);
                         accTo.credit(sum);
                     }
-                }
-                finally {
+                } finally {
                     lockOfAccFrom.unlock();
                     lockOfAccTo.unlock();
                 }
-            }
-            else {
+            } else {
                 lockOfAccFrom.unlock();
             }
         }
