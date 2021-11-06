@@ -41,30 +41,30 @@ public class Transfer implements Runnable {
 
     // FIRST SOLUTION
     private void transferMoneyFirstSolution(Account accFrom, Account accTo, int sum) throws InterruptedException {
-        Account from;
-        Account to;
+        Account lockFrom;
+        Account lockTo;
 
         if (accFrom.getAccNumber() < accTo.getAccNumber()) {
-            from = accFrom;
-            to = accTo;
+            lockFrom = accFrom;
+            lockTo = accTo;
         } else {
-            from = accTo;
-            to = accFrom;
+            lockFrom = accTo;
+            lockTo = accFrom;
         }
 
         try {
-            from.getLock().lock();
+            lockFrom.getLock().lock();
             try {
-                to.getLock().lock();
+                lockTo.getLock().lock();
                 if (accFrom.getBalance() >= sum) {
                     accFrom.debit(sum);
                     accTo.credit(sum);
                 }
             } finally {
-                to.getLock().unlock();
+                lockTo.getLock().unlock();
             }
         } finally {
-            from.getLock().unlock();
+            lockFrom.getLock().unlock();
         }
 
     }
