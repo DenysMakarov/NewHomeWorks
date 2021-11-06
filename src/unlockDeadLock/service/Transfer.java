@@ -75,9 +75,6 @@ public class Transfer implements Runnable {
         Lock lockOfAccFrom = accFrom.getLock();
         Lock lockOfAccTo = accTo.getLock();
 
-        System.out.println("Acc " + accFrom.getAccNumber() + "  " + accFrom.getBalance());
-//        System.out.println(" Acc " + accTo.getBalance());
-
         if (lockOfAccFrom.tryLock()) {
             if (lockOfAccTo.tryLock()) {
                 try {
