@@ -9,8 +9,8 @@ public class TransferDeadLockApp {
         Account father = new Account(1);
         Account son = new Account(2);
 
-        father.credit(1000);
-        son.credit(1000);
+        father.credit(1000000);
+        son.credit(1000000);
 
         Transfer transfer1 = new Transfer(father, son, 500);
         Transfer transfer2 = new Transfer(son, father, 500);

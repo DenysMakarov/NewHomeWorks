@@ -7,7 +7,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Transfer implements Runnable {
-    private static final int N_TRANSACTION = 3;
+    private static final int N_TRANSACTION = 10_000;
     Account assDonor;
     Account accRecipient;
     int sum;
@@ -28,7 +28,7 @@ public class Transfer implements Runnable {
     public void run() {
         Random random = new Random();
         for (int i = 0; i < N_TRANSACTION; i++) {
-//            int sum = random.nextInt(this.sum);
+            int sum = random.nextInt(this.sum);
             try {
                 transferMoneyFirstSolution(assDonor, accRecipient, sum);
             } catch (InterruptedException e) {
@@ -40,27 +40,22 @@ public class Transfer implements Runnable {
 
 // FIRST SOLUTION
     private void transferMoneyFirstSolution(Account accFrom, Account accTo, int sum) throws InterruptedException {
-        Account from;
-        Account to;
+        Account lockAccount;
 
         if (accFrom.getAccNumber() < accTo.getAccNumber()) {
-            from = accFrom;
-            to = accTo;
+            lockAccount = accFrom;
         } else {
-            from = accTo;
-            to = accFrom;
+            lockAccount = accTo;
         }
 
         try {
-            from.getLock().lock();
-            to.getLock().lock();
+            lockAccount.getLock().lock();
             if (accFrom.getBalance() >= sum) {
                 accFrom.debit(sum);
                 accTo.credit(sum);
             }
         } finally {
-            from.getLock().unlock();
-            to.getLock().unlock();
+            lockAccount.getLock().unlock();
         }
 
     }
