@@ -73,14 +73,14 @@ public class Company implements ICompany {
 	@Override
 	public double totalSalary() {
 		double sum = 0;
-		write.lock();
+		read.lock();
 		try{
 			for (int i = 0; i < size; i++) {
 				sum += employees[i].calcSalary();
 			}
 			return sum;
 		}finally {
-			write.unlock();
+			read.unlock();
 		}
 	}
 
@@ -97,7 +97,7 @@ public class Company implements ICompany {
 	@Override
 	public double totalSales() {
 		double sum = 0;
-		write.lock();
+		read.lock();
 		try {
 			for (int i = 0; i < size; i++) {
 				if(employees[i] instanceof SalesManager) {
@@ -107,7 +107,7 @@ public class Company implements ICompany {
 			}
 			return sum;
 		}finally {
-			write.unlock();
+			read.unlock();
 		}
 	}
 
