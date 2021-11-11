@@ -1,5 +1,7 @@
 package telran.mediation;
 
+import java.util.List;
+
 /**
  * This interface represents Blocking Queue for usage
  * as communication buffer between Producers and Consumers
@@ -7,6 +9,4 @@ package telran.mediation;
 public interface IBlkQueue<T> {
 	void push(T message);
 	T pop();
-
-	int getSize();
 }

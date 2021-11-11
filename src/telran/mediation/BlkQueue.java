@@ -15,28 +15,16 @@ public class BlkQueue<T> implements IBlkQueue<T> {
 	Condition receiveCondition = mutex.newCondition();
 
 	public BlkQueue(int maxSize) {
-		this.msg =  new ArrayList<>();
+		this.msg =  new ArrayList<T>();
 		this.maxSize = maxSize;
 	}
 
-	@Override
-	public int getSize() {
-		return msg.size();
+	public List<T> getMsg() {
+		return msg;
 	}
 
-//	@Override
-//	public synchronized void push(T message) {
-//		while (msg.size() >= maxSize){
-//			try {
-//				wait();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		msg.add(message);
-//		notifyAll();
-//	}
 
+// MUTEX CONDITION
 	@Override
 	public void push(T message) {
 		mutex.lock();
@@ -49,14 +37,48 @@ public class BlkQueue<T> implements IBlkQueue<T> {
 				}
 			}
 			msg.add(message);
-			receiveCondition.signal();
+			receiveCondition.signalAll();
 		}finally {
 			mutex.unlock();
 		}
-
 	}
 
-//	@Override
+	@Override
+	public T pop() {
+		mutex.lock();
+		try {
+			while (msg.size() < 1){
+				try {
+					receiveCondition.await();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+			T message = msg.get(0);
+			msg.remove(0);
+			senderCondition.signal();
+			return message;
+		}finally {
+			mutex.unlock();
+		}
+	}
+
+	// SYNCHRONIZED
+	//	@Override
+//	public synchronized void push(T message) {
+//		while (msg.size() >= maxSize){
+//			try {
+//				wait();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		msg.add(message);
+//		notifyAll();
+//	}
+
+	//	@Override
 //	public synchronized T pop() {
 //		while (msg.size() < 1){
 //			try {
@@ -70,25 +92,5 @@ public class BlkQueue<T> implements IBlkQueue<T> {
 //		notifyAll();
 //		return message;
 //	}
-
-	@Override
-	public T pop() {
-		mutex.lock();
-		try {
-			while (msg.size() < 1){
-				try {
-					receiveCondition.await();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			T message = msg.get(0);
-			msg.remove(0);
-			senderCondition.signal();
-			return message;
-		}finally {
-			mutex.unlock();
-		}
-	}
 
 }
