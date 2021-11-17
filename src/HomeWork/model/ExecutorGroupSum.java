@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 public class ExecutorGroupSum extends GroupSum{
 
     final int CHUNKS = numbersGroup.length;
-
     public ExecutorGroupSum(int[][] numbersGroup) {
         super(numbersGroup);
     }
@@ -26,13 +25,13 @@ public class ExecutorGroupSum extends GroupSum{
         for(int i = 0; i < tasks.length; i++){
             executorService.execute(tasks[i]);
         }
+
         executorService.shutdown();
         try {
             executorService.awaitTermination(1, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
 
         return Arrays.stream(tasks)
                 .mapToInt(OneGroupSum::getSum)

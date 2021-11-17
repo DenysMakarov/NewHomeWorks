@@ -1,9 +1,6 @@
 package HomeWork.controller;
 
-import HomeWork.model.ExecutorGroupSum;
-import HomeWork.model.GroupSum;
-import HomeWork.model.ParallelStreamGroupSum;
-import HomeWork.model.ThreadGroupSum;
+import HomeWork.model.*;
 import HomeWork.tests.GropeSumPerformanceTest;
 
 import java.util.Random;
@@ -19,11 +16,14 @@ public class GroupSumApp {
         GroupSum executorsGroupSum = new ExecutorGroupSum(arr);
         GroupSum threadGroupSum = new ThreadGroupSum(arr);
         GroupSum parallelStreamGroupSum = new ParallelStreamGroupSum(arr);
+        MyExecutor myExecutor = new MyExecutor(arr);
 
         new GropeSumPerformanceTest("ExecutorGroupSum", executorsGroupSum).runTest();
         new GropeSumPerformanceTest("ThreadGroupSum", threadGroupSum).runTest();
         new GropeSumPerformanceTest("ParallelStreamGroupSum", parallelStreamGroupSum).runTest();
+        new GropeSumPerformanceTest("MyExecutor", myExecutor).runTest();
 
+        System.out.println("All threads completed");
     }
 
     private static void fillArray() {
